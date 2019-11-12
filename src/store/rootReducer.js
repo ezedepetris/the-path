@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
-import { reducer as user } from './reducers/user';
+import { reducer as directions } from './reducers/directions';
+import { reducer as location } from './reducers/location';
 
 export default function configureReducers() {
   return combineReducers({
-    user,
+    directions,
+    location,
   });
 }
