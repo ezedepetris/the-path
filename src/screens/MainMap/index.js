@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { View, Text, StatusBar, SafeAreaView } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 import SearchInput from '../../components/SearchInput';
 import Destinations from '../../components/Destinations';
 import styles from './styles';
-import MapView from 'react-native-maps';
+import MapView, { AnimatedRegion, Marker } from 'react-native-maps';
 
-const origin = {latitude: 37.3318456, longitude: -122.0296002};
-const destination = {latitude: 37.771707, longitude: -122.4053769};
-const GOOGLE_MAPS_APIKEY = 'AIzaSyCW5RqoXBxw1TeQBLQsU3qsYzbjHJ380oQ';
+const destination = {latitude: -36.846316, longitude: 174.776656 };
+const GOOGLE_MAPS_APIKEY = '';
 
 class MainMap extends React.Component {
   constructor(props){
@@ -22,7 +22,7 @@ class MainMap extends React.Component {
   render() {
     return (
       <SafeAreaView  style={{ flex: 1 }}>
-      <StatusBar backgroundColor='black' barStyle="dark-content" />
+      <StatusBar translucent backgroundColor={'transparent'} barStyle="dark-content" />
       <SearchInput
         inputStyle={styles.searchInputStyle}
         placeholder={"Search a destination"}
@@ -33,14 +33,20 @@ class MainMap extends React.Component {
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
-          latitude: 37.3318456,
-          longitude: -122.0296002,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+          ...this.props.location,
+          latitudeDelta: 0.02,
+          longitudeDelta: 0.01,
         }}
       >
+      <MapView.Marker.Animated
+        draggable={true} // Change to true when the user press update COORDInATE
+        ref={marker => { this.marker = marker }}
+        coordinate={this.props.location}
+        // onDragEnd={ (e) => console.log("NEW LOCATION: ", e.nativeEvent.coordinate) }
+        onDragEnd={(e) => this.props.setLocation(e.nativeEvent.coordinate)}
+      />
         <MapViewDirections
-          origin={origin}
+          origin={this.props.location}
           strokeWidth={10}
           destination={destination}
           apikey={GOOGLE_MAPS_APIKEY}
@@ -52,4 +58,14 @@ class MainMap extends React.Component {
   }
 }
 
-export default MainMap;
+
+const mapStateToProps = state => ({
+  location: state.location.initial,
+  destination: state.location.destination,
+})
+
+const mapDispatchToProps = dispatch => ({
+  setLocation: (location) => dispatch({ type: 'SET_LOCATION', location })
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainMap);

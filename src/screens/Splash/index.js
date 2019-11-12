@@ -10,13 +10,18 @@ import {
   StatusBar,
   Button,
 } from 'react-native';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
+import getLocation from '../../services/getLocation';
+import { permissionCheck, permissionFor } from '../../services/permissions';
 import styles from './styles';
+import { PERMISSIONS } from 'react-native-permissions';
+
 
 const { width, height } = Dimensions.get('window');
 
-export default class Splash extends React.Component {
+class Splash extends React.Component {
   constructor() {
     super();
 
@@ -32,11 +37,27 @@ export default class Splash extends React.Component {
 
   componentDidMount() {
     this.animate();
+    this.startUp();
   }
 
-  onFacebooklogin() {
-    
-  };
+  async startUp() {
+    try {
+      // let locationEnabled = await permissionCheck(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      let locationEnabled = await permissionFor(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+      console.log("LOCATION: ", locationEnabled)
+
+      if (locationEnabled) {
+        console.log("LOCATION MADA FAKA")
+        const location = await getLocation();
+        this.props.setLocation(location);
+        console.log("AFTER")
+        // this.props.getLocation(location);
+        this.props.navigation.navigate('Main');
+      }
+    } catch(e) {
+      console.log("ERROR ON REQUEST PERMISSION: ", e)
+    }
+  }
 
   animate() {
     const createAnimation = (value, duration, easing, delay = 0) => Animated.timing(value, {
@@ -123,13 +144,13 @@ export default class Splash extends React.Component {
     );
   }
 }
-          // <Image
-          //   source={require('../../assets/images/CombinedShape.png')}
-          //   style={{
-          //     height: height + 380,
-          //     width,
-          //   }}
-          // />
+
+const mapDispatchToProps = dispatch => ({
+  setLocation: (location) => dispatch({ type: 'SET_LOCATION', location }),
+  getDirections: () => dispatch({ type: 'GET_DIRECTIONS' })
+})
+
+export default connect(null, mapDispatchToProps)(Splash)
 
 Splash.propTypes = {
   navigation: PropTypes.shape({
