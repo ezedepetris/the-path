@@ -1,6 +1,7 @@
 import React from 'react';
-import { TextInput, View, Animated, FlatList, Text } from 'react-native';
+import { TextInput, View, Animated, FlatList, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { SwipeListView } from 'react-native-swipe-list-view';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
@@ -25,25 +26,37 @@ const DATA = [
 const Destinations = (props) => (
  <View style={styles.container}>
     <Text style={styles.header} >Destinations</Text>
-    <FlatList
-      style={styles.flatList}
+    <SwipeListView
+      useFlatList
       data={DATA}
       renderItem={renderItem}
+      renderHiddenItem={renderLeftItem}
+      disableLeftSwipe
+      leftOpenValue={70}
+      style={styles.flatList}
       keyExtractor={item => item.id}
     />
   </View>
 );
 
-
-
-const renderItem = ({ item, index }) => {
-  return (
-    <View style={styles.item}>
+const renderItem = ({ item, index }) => (
+  <View style={styles.itemContainer} >
+    <TouchableOpacity style={styles.item} onPress={() => console.log("GO TO THIS DIRENCTION") } >
       <Text style={styles.title}>({index+1}) {item.title}</Text>
       <Text style={styles.subtitle}>{item.subtitle}</Text>
-    </View>
-  );
-}
+    </TouchableOpacity>
+  </View>
+);
+
+const renderLeftItem = (data, rowMap) => (
+  <TouchableOpacity onPress={() => console.log("REMOVE!!!!!: ", data.item.id) } style={styles.iconContainer}>
+    <Icon
+      name="trash"
+      style={styles.icon}
+    />
+  </TouchableOpacity>
+)
+
 export default Destinations;
 
 Destinations.defaultProps = {

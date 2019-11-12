@@ -46,6 +46,8 @@ target 'ThePath' do
 
   pod 'react-native-maps', path: rn_maps_path
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'ThePathTests' do
     inherit! :search_paths
     # Pods for testing

@@ -53,5 +53,22 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>RobotoSlab-Bold.ttf</string>
+		<string>RobotoSlab-Regular.ttf</string>
+		<string>Ubuntu-Bold.ttf</string>
+		<string>Ubuntu-Regular.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Light.ttf</string>
+		<string>Roboto-Regular.ttf</string>
+		<string>RobotoSlab-Thin.ttf</string>
+		<string>Ubuntu-Light.ttf</string>
+		<string>Ubuntu-Medium.ttf</string>
+	</array>
 </dict>
 </plist>
