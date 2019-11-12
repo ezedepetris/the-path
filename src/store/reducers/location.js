@@ -32,16 +32,16 @@ const setLoadingReducer = (state, { value }) => ({
 
 const { Types, Creators } = createActions({
   setLoading: ['value'],
-  getLocation: null,
-  setLocation: ['payload'],
-  getDestination: null,
-  setDestination: ['payload'],
+  setLocation: null,
+  newLocation: ['payload'],
+  setDestination: null,
+  newDestination: ['payload'],
 });
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_LOADING]: setLoadingReducer,
-  [Types.SET_LOCATION]: setLocationReducer,
-  [Types.SET_DESTINATION]: setDestinationReducer,
+  [Types.NEW_LOCATION]: setLocationReducer,
+  [Types.NEW_DESTINATION]: setDestinationReducer,
 });
 
 export const LocationTypes = Types;

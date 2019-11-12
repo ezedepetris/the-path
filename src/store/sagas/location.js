@@ -2,12 +2,10 @@ import { takeLatest, put } from 'redux-saga/effects';
 import { AsyncStorage } from 'react-native';
 import LocationActions, { LocationTypes } from '../reducers/location';
 
-function* getLocationHandler() {
+function* setLocationHandler({location}) {
   try {
-    // const location = yield AsyncStorage.getItem('location');
-    const location ={ latitude: 37.3318456, longitude: -122.0296002 }
-    
-    yield put(LocationActions.setLocation(location));
+    console.log("LOCATION ON SAGA: ", location)
+    yield put(LocationActions.newLocation(location));
   } catch (err) {
     console.log('getLocationHandler error', err);
   }
@@ -18,15 +16,15 @@ function* setDestinationHandler(location) {
     // const location = yield AsyncStorage.getItem('location');
     // const location ={ latitude: 37.3318456, longitude: -122.0296002 }
     
-    yield put(LocationActions.setDestination(location));
+    yield put(LocationActions.newDestination(location));
   } catch (err) {
     console.log('getLocationHandler error', err);
   }
 }
 
 function* locationWatcher() {
-  yield takeLatest(LocationTypes.GET_LOCATION, getLocationHandler);
-  yield takeLatest(LocationTypes.SET_DESTINATION, getLocationHandler);
+  yield takeLatest(LocationTypes.SET_LOCATION, setLocationHandler);
+  yield takeLatest(LocationTypes.SET_DESTINATION, setDestinationHandler);
 }
 
 export default [
