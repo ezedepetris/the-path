@@ -42,18 +42,16 @@ class Splash extends React.Component {
 
   async startUp() {
     try {
+      this.props.getDirections();
       // let locationEnabled = await permissionCheck(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
       let locationEnabled = await permissionFor(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
-      console.log("LOCATION: ", locationEnabled)
 
       if (locationEnabled) {
-        console.log("LOCATION MADA FAKA")
         const location = await getLocation();
         this.props.setLocation(location);
-        console.log("AFTER")
-        // this.props.getLocation(location);
         this.props.navigation.navigate('Main');
       }
+        // this.props.getLocation(location);
     } catch(e) {
       console.log("ERROR ON REQUEST PERMISSION: ", e)
     }

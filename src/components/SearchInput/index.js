@@ -5,15 +5,9 @@ import PropTypes from 'prop-types';
 import styles from './styles';
 
 const SearchInput = (props) => {
-  const {
-    style,
-    onSearchPress,
-    inputStyle,
-    onSliderPress,
-    noRightIcon,
-  } = props;
+  const { onSearchPress, inputStyle } = props;
   return (
-    <Animated.View style={[styles.view, style]}>
+    <Animated.View style={styles.view}>
       <Icon
         name="search"
         color="#C6C6C6"
@@ -21,19 +15,11 @@ const SearchInput = (props) => {
         onPress={onSearchPress}
       />
       <TextInput
-        placeholder="Search"
+        placeholder="Search a destination"
         placeholderTextColor="#C6C6C6"
         {...props}
         style={[styles.input, inputStyle]}
       />
-      {!noRightIcon && (
-        <Icon
-          name="sliders"
-          color="#C6C6C6"
-          style={styles.icon}
-          onPress={onSliderPress}
-        />
-      )}
     </Animated.View>
   );
 };
@@ -44,7 +30,7 @@ SearchInput.defaultProps = {
   style: {},
   inputStyle: {},
   onSearchPress: () => {},
-  onSliderPress: () => {},
+  ref: () => {},
   noRightIcon: false,
 };
 
@@ -52,6 +38,6 @@ SearchInput.propTypes = {
   style: PropTypes.object,
   inputStyle: PropTypes.object,
   onSearchPress: PropTypes.func,
-  onSliderPress: PropTypes.func,
+  ref: PropTypes.func,
   noRightIcon: PropTypes.bool,
 };

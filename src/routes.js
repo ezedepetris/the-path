@@ -10,7 +10,6 @@ import Splash from './screens/Splash';
 const AppStackNavigator = createAppContainer(createStackNavigator(
   {
     MainMap: { screen: MainMap },
-    Location: { screen: Location },
   },
   {
     initialRouteName: 'MainMap',    
