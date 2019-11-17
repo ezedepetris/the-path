@@ -9,7 +9,8 @@ const INITIAL_STATE = {
   destination: {
     latitude: null,
     longitude: null
-  }
+  },
+  indications: {}
 }
 
 const setLocationReducer = (state, { payload }) => ({
@@ -20,7 +21,8 @@ const setLocationReducer = (state, { payload }) => ({
 
 const setDestinationReducer = (state, { payload }) => ({
   ...state,
-  destination: { ...payload },
+  destination: payload.destination,
+  indications: payload.indications,
   loading: false
 });
 
@@ -29,14 +31,16 @@ const setLoadingReducer = (state, { value }) => ({
   loading: value
 })
 
-
 const { Types, Creators } = createActions({
   setLoading: ['value'],
   setLocation: null,
   newLocation: ['payload'],
   setDestination: null,
   newDestination: ['payload'],
+  cleanDestination: null,
 });
+
+export const getInitialLoction = (state) => state.location.initial
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_LOADING]: setLoadingReducer,
