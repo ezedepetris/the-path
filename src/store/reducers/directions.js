@@ -2,26 +2,28 @@ import { createReducer, createActions } from 'reduxsauce';
 
 const INITIAL_STATE = {
   loading: true,
-  address: []
+  addresses: []
 }
 
 const setDirectionsReducer = (state, { payload }) => {
+  console.log("PAYLOAD ON SET DIRECTIONS: ", payload)
   return {
-    address: payload.directions,
+    addresses: payload,
     loading: false
   };
 };
 
 const setNewDirectionReducer = (state, { payload }) => {
+  console.log("SETTT THE NEWWWWW DIRECTTTIONNNNN::::", payload)
   return {
-    address: [...state.address, payload.adress],
+    addresses: [...state.addresses, payload],
     loading: false
   };
 };
 
 const removeDirectionReducer = (state, { payload }) => {
   return {
-    address: [...state.address, payload.adress],
+    addresses: [...state.addresses, payload.adress],
     loading: false
   };
 };
@@ -40,6 +42,8 @@ const { Types, Creators } = createActions({
   setNewDirection: ['payload'],
   deleteDirection: ['payload'],
 });
+
+export const getDirections = (state) => state.directions.addresses
 
 export const reducer = createReducer(INITIAL_STATE, {
   [Types.SET_LOADING]: setLoadingReducer,
