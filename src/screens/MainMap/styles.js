@@ -15,7 +15,7 @@ export default {
   },
   searchInputStyle: {
     color: '#313131',
-    fontFamily: styleGuide.font.UbuntuMedium,
+    // fontFamily: styleGuide.font.UbuntuMedium,
   },
   route: {
     backgroundColor: 'white',
