@@ -13,7 +13,7 @@ import MapView, { AnimatedRegion, Marker } from 'react-native-maps';
 const GOOGLE_MAPS_APIKEY = 'AIzaSyCW5RqoXBxw1TeQBLQsU3qsYzbjHJ380oQ';
 
 class MainMap extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
@@ -24,23 +24,19 @@ class MainMap extends React.Component {
   }
 
   render() {
-    console.log("DESTINATION: ", this.props.destination.latitude)
     return (
       <SafeAreaView  style={{ flex: 1 }}>
       <StatusBar translucent backgroundColor={'transparent'} barStyle="dark-content" />
-      { (this.props.destination.latitude !== null) && (
-        <BackButton onBack={() => this.props.cleanDestination() }/>
-      )}
+      <BackButton visible={this.props.destination.latitude !== null} onBack={() => this.props.cleanDestination() }/>
 
-      { (this.props.destination.latitude == null) && (
-        <SearchInput
-          inputStyle={styles.searchInputStyle}
-          onChangeText={ (text) => this.setState({keyword: text}) }
-          onFocus={ () => this.setState({ showSearchDirections: true }) }
-          onSubmitEditing={ ({nativeEvent}) => this.props.searchAddress(nativeEvent.text) }
-          value={this.state.keyword}
-        />
-      )}
+      <SearchInput
+        inputStyle={styles.searchInputStyle}
+        onChangeText={ (text) => this.setState({keyword: text}) }
+        onFocus={ () => this.setState({ showSearchDirections: true }) }
+        onSubmitEditing={ ({nativeEvent}) => this.props.searchAddress(nativeEvent.text) }
+        visible={this.props.destination.latitude == null}
+        value={this.state.keyword}
+      />
       <MapView
         style={{ flex: 1 }}
         initialRegion={{
@@ -74,21 +70,25 @@ class MainMap extends React.Component {
         )}
       </MapView>
 
-      {(!this.state.showSearchDirections && this.props.destination.latitude == null) && (
-          <Destinations directions={this.props.directions} setDestination={this.props.setDestination} removeDestination={this.props.removeDestination}/>
-      )}
+      <Destinations
+        directions={this.props.directions}
+        setDestination={this.props.setDestination}
+        removeDestination={this.props.removeDestination}
+        visible={!this.state.showSearchDirections && this.props.destination.latitude == null}
+      />
 
-      {(this.state.showSearchDirections && this.props.destination.latitude == null) && (
-        <NewDestinations addresses={this.props.addresses}
-          addNewDestination={this.props.saveAddress}
-          close={() => this.setState(state => ({ showSearchDirections: !state.showSearchDirections })) }
-          // close={() => {console.log("REFFF: ", this.searchInput); this.setState(state => ({ showSearchDirections: !state.showSearchDirections }))} }
-        />
-      )}
+      <NewDestinations addresses={this.props.addresses}
+        addNewDestination={this.props.saveAddress}
+        close={() => this.setState(state => ({ showSearchDirections: !state.showSearchDirections })) }
+        visible={this.state.showSearchDirections}
+        // visible={this.state.showSearchDirections && this.props.destination.latitude == null}
+      />
 
-      {(this.props.destination.latitude !== null) && (
-        <Indications indications={this.props.indications}/>
-      )}
+      <Indications
+        indications={this.props.indications}
+        visible={this.props.destination.latitude !== null}
+      />
+
       </SafeAreaView>
     )
   }
