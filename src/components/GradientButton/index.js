@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { TouchableHighlight, Text, ActivityIndicator } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -17,7 +15,7 @@ const GradientButton = (props) => {
       onPress={onPress}
     >
       <LinearGradient
-        colors={['#fe981c', '#d441d9']}
+        colors={['#fe981c', '#d41bde']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[styles.touchableHighlight, style]}
