@@ -15,9 +15,6 @@ function* setDestinationHandler({destination}) {
   try {
     let initialLocation = yield select(getInitialLoction);
 
-    console.log(`INITIAL LOCATION: ${initialLocation.latitude},${initialLocation.longitude}`)
-    console.log(`END LOCATION: ${destination.latitude},${destination.longitude}`)
-
     const response = yield axios.get('https://maps.googleapis.com/maps/api/directions/json', {
       params: {
         key: 'AIzaSyCW5RqoXBxw1TeQBLQsU3qsYzbjHJ380oQ',
@@ -27,8 +24,6 @@ function* setDestinationHandler({destination}) {
     })
 
     const responseIndications = response.data.routes[0].legs[0]
-    console.log("RESPONSE ROUTES ON SET DESTINATION: ", responseIndications)
-    console.log("RESPONSE ON SET DESTINATION: ", responseIndications.distance)
 
     let indications = {
       distance: responseIndications.distance.text,
@@ -36,16 +31,6 @@ function* setDestinationHandler({destination}) {
       endAddress: responseIndications.end_address,
       steps: responseIndications.steps.map(i => ({ text: i.html_instructions, distance: i.distance.text })),
     }
-
-    console.log("FORMATTED INDICATIONS", indications)
-
-    // let formattedAddress = {
-    //   placeId: place.placeId,
-    //   title: place.title,
-    //   subtitle: place.subtitle,
-    //   location: { latitude: placeAux.geometry.location.lat, longitude: placeAux.geometry.location.lng }
-    // }
-    
 
     yield put(LocationActions.newDestination({ destination, indications }));
   } catch (err) {

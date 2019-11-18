@@ -9,7 +9,6 @@ function* searchAddressesHandler({keyword}) {
   try {
     const directions = yield select(getDirections);
     const directionPlaceIds = directions.map(d => d.placeId)
-    console.log("DIRECTION PLACEDS IDSSS: ",directionPlaceIds)
 
     let response = yield axios.get('https://maps.googleapis.com/maps/api/place/autocomplete/json', {
       params: {
@@ -27,8 +26,6 @@ function* searchAddressesHandler({keyword}) {
     }))
 
     formattedAddresses = formattedAddresses.filter(address => !directionPlaceIds.includes(address.placeId))
-
-    console.log("FORMATTED PLACESS: ", formattedAddresses)
 
     yield put(AddressesActions.setAddresses(formattedAddresses));
   } catch (err) {
