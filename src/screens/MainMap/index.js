@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StatusBar, SafeAreaView } from 'react-native';
+import { StatusBar, SafeAreaView } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 import SearchInput from '../../components/SearchInput';
 import Destinations from '../../components/Destinations';
 import Indications from '../../components/Indications';
 import NewDestinations from '../../components/NewDestinations';
+import Icon from 'react-native-vector-icons/Ionicons';
 import BackButton from '../../components/BackButton';
-import styles from './styles';
 import MapView, { AnimatedRegion, Marker } from 'react-native-maps';
+import styles from './styles';
 
 const GOOGLE_MAPS_APIKEY = 'AIzaSyCW5RqoXBxw1TeQBLQsU3qsYzbjHJ380oQ';
 
@@ -16,7 +17,7 @@ class MainMap extends React.Component {
   constructor(props) {
     super(props)
 
-    this.state = {
+    this.state = { 
       showSearchDirections: false,
       editLocation: false,
       editDestination: false,
@@ -27,14 +28,14 @@ class MainMap extends React.Component {
     return (
       <SafeAreaView  style={{ flex: 1 }}>
       <StatusBar translucent backgroundColor={'transparent'} barStyle="dark-content" />
-      <BackButton visible={this.props.destination.latitude !== null} onBack={() => this.props.cleanDestination() }/>
+      <BackButton visible={this.props.destinationSetted} onBack={() => this.props.cleanDestination() }/>
 
       <SearchInput
         inputStyle={styles.searchInputStyle}
         onChangeText={ (text) => this.setState({keyword: text}) }
         onFocus={ () => this.setState({ showSearchDirections: true }) }
         onSubmitEditing={ ({nativeEvent}) => this.props.searchAddress(nativeEvent.text) }
-        visible={this.props.destination.latitude == null}
+        visible={!this.props.destinationSetted}
         value={this.state.keyword}
       />
       <MapView
@@ -48,45 +49,36 @@ class MainMap extends React.Component {
         <MapView.Marker.Animated
           draggable={this.state.editLocation} // Change to true when the user press update COORDInATE
           ref={ marker => this.marker = marker }
+          title={'Current Location'}
+          flat={true}
+          icon={<Icon
+            name="ios-arrow-round-back"
+            color="#C6C6C6"
+            style={styles.icon}
+          />}
           coordinate={this.props.location}
           onDragEnd={(e) => this.props.setLocation(e.nativeEvent.coordinate)}
         />
-        { (this.props.destination.latitude !== null) && (
-          <MapViewDirections
-            origin={this.props.location}
-            strokeWidth={10}
-            destination={this.props.destination}
-            apikey={GOOGLE_MAPS_APIKEY}
-          />
-        )}
-
-        { (this.props.destination.latitude !== null) && (
-          <MapView.Marker.Animated
-            draggable={this.state.editDestination} // Change to true when the user press update COORDInATE
-            ref={ marker => this.markerDestination = marker }
-            coordinate={this.props.destination}
-            onDragEnd={(e) => this.props.setDestination(e.nativeEvent.coordinate)}
-          />
-        )}
+        
       </MapView>
 
       <Destinations
         directions={this.props.directions}
-        setDestination={this.props.setDestination}
+        navigateToDirections={this.props.navigateToDirections}
         removeDestination={this.props.removeDestination}
-        visible={!this.state.showSearchDirections && this.props.destination.latitude == null}
+        visible={!this.state.showSearchDirections && !this.props.destinationSetted}
       />
 
       <NewDestinations addresses={this.props.addresses}
         addNewDestination={this.props.saveAddress}
         close={() => this.setState(state => ({ showSearchDirections: !state.showSearchDirections })) }
         visible={this.state.showSearchDirections}
-        // visible={this.state.showSearchDirections && this.props.destination.latitude == null}
+        // visible={this.state.showSearchDirections && this.props.destinationSetted == null}
       />
 
       <Indications
         indications={this.props.indications}
-        visible={this.props.destination.latitude !== null}
+        visible={this.props.destinationSetted}
       />
 
       </SafeAreaView>
@@ -96,7 +88,7 @@ class MainMap extends React.Component {
 
 const mapStateToProps = state => ({
   location: state.location.initial,
-  destination: state.location.destination,
+  destinationSetted: state.location.destinationSetted,
   indications: state.location.indications,
   directions: state.directions.addresses,
   addresses: state.addresses,
@@ -106,7 +98,7 @@ const mapDispatchToProps = dispatch => ({
   searchAddress: (keyword) => dispatch({ type: 'SEARCH_ADDRESSES', keyword: keyword }),
   saveAddress: (place) => dispatch({ type: 'ADD_DIRECTION', place }),
   setLocation: (location) => dispatch({ type: 'SET_LOCATION', location }),
-  setDestination: (destination) => dispatch({ type: 'SET_DESTINATION', destination }),
+  navigateToDirections: () => dispatch({ type: 'SET_DESTINATION' }),
   cleanDestination: () => dispatch({ type: 'CLEAN_DESTINATION' }),
   removeDestination: (placeId) => dispatch({ type: 'REMOVE_DIRECTION', placeId }),
 })

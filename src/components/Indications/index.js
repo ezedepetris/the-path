@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { TextInput, View, Animated, FlatList, Text, TouchableOpacity, Dimensions } from 'react-native';
+import { TextInput, View, Animated, SectionList, Text, TouchableOpacity, Dimensions } from 'react-native';
 import HTML from 'react-native-render-html';
 import PropTypes from 'prop-types';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import GradientButton from '../../components/GradientButton';
 import styles from './styles';
 
@@ -63,14 +62,19 @@ class Indications extends Component {
     return (
       <Animated.View style={[containerStyle, styles.container]}>
         <GradientButton
-          text={this.state.openModal ? "Close" : "Instructions"}
+          text={this.state.openModal ? "Close" : "Indications"}
           style={{ alignSelf:'flex-end', marginRight: 10, paddingVertical: 5 }}
           onPress={() => this.setState(state => ({openModal: !state.openModal})) }
         />
         <Animated.View style={styles.flatListContainer}>
-          <FlatList
-            data={this.props.indications.steps}
+          <SectionList
+            sections={this.props.indications}
             renderItem={this.renderItem}
+            renderSectionHeader={({ section: { title } }) => (
+              <View style={styles.header}>
+                <Text style={styles.itemHeader}>{title}</Text>
+              </View>
+            )}
             style={styles.flatList}
             keyExtractor={(item, index) => index}
           />
@@ -83,7 +87,7 @@ class Indications extends Component {
     return (
       <View style={styles.item}>
         <View style={{ flexDirection: 'column'}}>
-          <HTML style={styles.title} html={item.text} imagesMaxWidth={Dimensions.get('window').width} />
+          <HTML html={item.text} baseFontStyle={styles.title}/>
         </View>
       </View>
     );

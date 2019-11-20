@@ -6,11 +6,8 @@ const INITIAL_STATE = {
     latitude: null,
     longitude: null
   },
-  destination: {
-    latitude: null,
-    longitude: null
-  },
-  indications: {}
+  destinationSetted: false,
+  indications: []
 }
 
 const setLocationReducer = (state, { payload }) => ({
@@ -21,7 +18,7 @@ const setLocationReducer = (state, { payload }) => ({
 
 const setDestinationReducer = (state, { payload }) => ({
   ...state,
-  destination: payload.destination,
+  destinationSetted: payload.destination,
   indications: payload.indications,
   loading: false
 });

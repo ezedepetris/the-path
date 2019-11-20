@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { TextInput, View, Animated, FlatList, Text, TouchableOpacity, Dimensions } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
+import GradientButton from '../GradientButton';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import PropTypes from 'prop-types';
 import styles from './styles';
 
-const { height } = Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 
 class Destinations extends Component {
 
@@ -62,7 +63,14 @@ class Destinations extends Component {
 
     return (
      <Animated.View style={[containerStyle, styles.container]}>
-        <Text style={styles.header}>Destinations</Text>
+        <View style={{flexDirection: 'row', width: width, borderWidth: 1}}>
+          <Text style={styles.header}>Destinations</Text>
+          <GradientButton
+            text={'Directions'}
+            style={{ justifyContent:'flex-end', marginRight: 10, marginBottom: 5, top:0, paddingVertical: 5}}
+            onPress={this.props.navigateToDirections}
+          />
+        </View>
         <SwipeListView
           useFlatList
           data={this.props.directions}
@@ -80,7 +88,7 @@ class Destinations extends Component {
   renderItem ({item, index}) {
     return (
       <View style={styles.itemContainer} >
-        <TouchableOpacity style={styles.item} onPress={() => this.props.setDestination(item.location) } >
+        <TouchableOpacity style={styles.item} onPress={() => this.props.navigateToDirections(item.location) } >
           <Text style={styles.title}>({index+1}) {item.title}</Text>
           <Text style={styles.subtitle}>{item.subtitle}</Text>
         </TouchableOpacity>
@@ -92,7 +100,7 @@ class Destinations extends Component {
     return (
       <TouchableOpacity onPress={() => this.props.removeDestination(data.item.placeId) } style={styles.iconContainer}>
         <Icon
-          name="trash"
+          name="ios-trash"
           style={styles.icon}
         />
       </TouchableOpacity>
