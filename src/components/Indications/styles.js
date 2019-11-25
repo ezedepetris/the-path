@@ -11,7 +11,7 @@ export default {
     alignItems: 'flex-start',
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    shadowColor: styleGuide.color.sgiLightGrey,
+    shadowColor: styleGuide.color.blackLightOpacity,
     shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 0.4,
     shadowRadius: 5,
@@ -45,7 +45,7 @@ export default {
     color: styleGuide.color.white,
   },
   header: {
-    shadowColor: styleGuide.color.sgiLightGrey,
+    shadowColor: styleGuide.color.blackLightOpacity,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 1,
     shadowRadius: 10,

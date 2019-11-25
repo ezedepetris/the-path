@@ -13,7 +13,7 @@ export default {
     paddingHorizontal: 15,
     paddingVertical: 5,
     borderRadius: 50,
-    shadowColor: styleGuide.color.sgiLightGrey,
+    shadowColor: styleGuide.color.blackLightOpacity,
     shadowOffset: { width: 5, height: 5 },
     shadowOpacity: 0.4,
     shadowRadius: 5,

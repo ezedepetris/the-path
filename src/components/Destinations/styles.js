@@ -13,7 +13,7 @@ export default {
     paddingTop: 5,
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
-    shadowColor: styleGuide.color.sgiLightGrey,
+    shadowColor: styleGuide.color.blackLightOpacity,
     shadowOffset: { width: 0, height: -5 },
     shadowOpacity: 0.4,
     shadowRadius: 5,
@@ -30,10 +30,8 @@ export default {
     paddingTop: 5,
     width: width
   },
-  itemContainer: {
-    backgroundColor: styleGuide.color.white,
-  },
   item: {
+    backgroundColor: styleGuide.color.white,
     paddingHorizontal: 15,
     flex: 1,
     paddingVertical: 10,
