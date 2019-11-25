@@ -3,6 +3,8 @@ import { AsyncStorage } from 'react-native';
 import * as axios from 'axios';
 import LocationActions, { LocationTypes, getInitialLoction } from '../reducers/location';
 import { getDirections } from '../reducers/directions';
+import { getDistanceFromLatLonInKm } from '../../services/locationHelper';
+import TSMS from '../../services/TSMS';
 
 function* setLocationHandler({location}) {
   try {
@@ -15,72 +17,57 @@ function* setLocationHandler({location}) {
 function* setDestinationHandler() {
   try {
     let initialLocation = yield select(getInitialLoction);
-    let directions = yield select(getDirections);
+    let savedDirections = yield select(getDirections);
+    let directions = [{ location: initialLocation }, ...savedDirections]
+
+    let directionsGraph = [[]];
+
+    for (let origin = 0; origin < directions.length; origin++) {
+      for (let destination = 0; destination < directions.length; destination++) {
+
+        if (origin == destination){
+          directionsGraph[origin][destination] = {}
+        } else {
+
+          directionsGraph[origin][destination] = {
+            origin: directions[origin].location,
+            destination: directions[destination].location,
+            distance: getDistanceFromLatLonInKm(directions[origin].location, directions[destination].location)
+          }
+        }
+      }
+      if(origin + 1 < directions.length)
+        directionsGraph.push([])
+    }
+
+    let tsmSolver = new TSMS(directionsGraph)
     let indications = [];
 
+    directions = tsmSolver.run();
 
-    // indications = yield new Promise((resolve, reject) => {
-    let indicationsResponse = yield  all(directions.map(direction => axios.get('https://maps.googleapis.com/maps/api/directions/json', {
+    let indicationsResponse = yield all(directions.map(direction => axios.get('https://maps.googleapis.com/maps/api/directions/json', {
       params: {
         key: 'AIzaSyCW5RqoXBxw1TeQBLQsU3qsYzbjHJ380oQ',
-        origin: `${initialLocation.latitude},${initialLocation.longitude}`,
-        destination: `${direction.location.latitude},${direction.location.longitude}`,
+        origin: `${direction.origin.latitude},${direction.origin.longitude}`,
+        destination: `${direction.destination.latitude},${direction.destination.longitude}`,
       }
-    })))//.then(response => {
+    })))
 
-      console.log("ALLFETCHES FROM APIIIIII: ",indicationsResponse[0])
-
-      indications = indicationsResponse.map( direction => {
-          const responseIndications = direction.data.routes[0].legs[0]
-          // const responseIndications = response.data.routes[0].legs[0]
-
-          // console.log("\n\n===========")
-          // responseIndications.steps.map(i => console.log(i.html_instructions))
-          // console.log("===========\n\n")
-
-          // let indications = [{
-          // indications.push({
-          return {
-            location: direction.location,
-            distance: responseIndications.distance.text,
-            duration: responseIndications.duration.text,
-            title: responseIndications.end_address,
-            data: responseIndications.steps.map(i => ({ text: i.html_instructions, distance: i.distance.text })),
-          }
-          // console.log("INDICATIONS ON EACH ITERATION: ", indications)
-        // }).catch(error => console.log("ERRRRORRRR ON GETT ALL indications: ", error))
-      // })
-      // resolve(indications);
-      // console.log("ALL THE INDICATIONS(BEFORE: ",indications)
-    });
+    indications = indicationsResponse.map( direction => {
+      const responseIndications = direction.data.routes[0].legs[0]
       
-      console.log("ALL THE INDICATIONS: ",indications.map(i => i.title))
-
-    // directions.forEach(direction => {
-
-    //   let response = yield axios.get('https://maps.googleapis.com/maps/api/directions/json', {
-    //     params: {
-    //       key: 'AIzaSyCW5RqoXBxw1TeQBLQsU3qsYzbjHJ380oQ',
-    //       origin: `${initialLocation.latitude},${initialLocation.longitude}`,
-    //       destination: `${direction.location.latitude},${direction.location.longitude}`,
-    //     }
-    //   })
-
-    //   const responseIndications = response.data.routes[0].legs[0]
-
-    //   // console.log("\n\n===========")
-    //   // responseIndications.steps.map(i => console.log(i.html_instructions))
-    //   // console.log("===========\n\n")
-
-    //   // let indications = [{
-    //   indications.push({
-    //     location: direction.location,
-    //     distance: responseIndications.distance.text,
-    //     duration: responseIndications.duration.text,
-    //     title: responseIndications.end_address,
-    //     data: responseIndications.steps.map(i => ({ text: i.html_instructions, distance: i.distance.text })),
-    //   })
-    // })
+      return {
+        location: { latitude: responseIndications.end_location.lat, longitude: responseIndications.end_location.lng },
+        origin_coords: { latitude: responseIndications.start_location.lat, longitude: responseIndications.start_location.lng },
+        dest_coords: { latitude: responseIndications.end_location.lat, longitude: responseIndications.end_location.lng },
+        distanceText: responseIndications.distance.text,
+        distance: responseIndications.distance.value,
+        duration: responseIndications.duration.text,
+        title: responseIndications.end_address,
+        data: responseIndications.steps.map(i => ({ text: i.html_instructions, distance: i.distance.text })),
+      }
+          
+    });
 
     yield put(LocationActions.newDestination({ destination: true, indications }));
   } catch (err) {

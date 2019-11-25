@@ -6,7 +6,6 @@ const INITIAL_STATE = {
 }
 
 const setDirectionsReducer = (state, { payload }) => {
-  console.log("PAYLOAD ON SET DIRECTIONS: ", payload)
   return {
     addresses: payload,
     loading: false
@@ -14,7 +13,6 @@ const setDirectionsReducer = (state, { payload }) => {
 };
 
 const setNewDirectionReducer = (state, { payload }) => {
-  console.log("SETTT THE NEWWWWW DIRECTTTIONNNNN::::", payload)
   return {
     addresses: [...state.addresses, payload],
     loading: false
