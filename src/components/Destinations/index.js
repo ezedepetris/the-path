@@ -63,7 +63,7 @@ class Destinations extends Component {
 
     return (
      <Animated.View style={[containerStyle, styles.container]}>
-        <View style={{flexDirection: 'row', width: width, borderWidth: 1}}>
+        <View style={{flexDirection: 'row', width: width}}>
           <Text style={styles.header}>Destinations</Text>
           <GradientButton
             text={'Directions'}
@@ -87,11 +87,9 @@ class Destinations extends Component {
 
   renderItem ({item, index}) {
     return (
-      <View style={styles.itemContainer} >
-        <TouchableOpacity style={styles.item} onPress={() => this.props.navigateToDirections(item.location) } >
-          <Text style={styles.title}>({index+1}) {item.title}</Text>
-          <Text style={styles.subtitle}>{item.subtitle}</Text>
-        </TouchableOpacity>
+      <View style={styles.item} >
+        <Text style={styles.title}>({index+1}) {item.title}</Text>
+        <Text style={styles.subtitle}>{item.subtitle}</Text>
       </View>
     )
   }
@@ -112,15 +110,15 @@ export default Destinations;
 Destinations.defaultProps = {
   style: {},
   inputStyle: {},
-  onSearchPress: () => {},
-  onSliderPress: () => {},
+  removeDestination: () => {},
+  navigateToDirections: () => {},
   noRightIcon: false,
 };
 
 Destinations.propTypes = {
   style: PropTypes.object,
   inputStyle: PropTypes.object,
-  onSearchPress: PropTypes.func,
-  onSliderPress: PropTypes.func,
+  removeDestination: PropTypes.func,
+  navigateToDirections: PropTypes.func,
   noRightIcon: PropTypes.bool,
 };
